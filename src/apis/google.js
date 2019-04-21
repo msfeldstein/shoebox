@@ -1,4 +1,4 @@
-/*global gapi */
+/* global gapi */
 const $script = require('scriptjs')
 
 $script('https://apis.google.com/js/api.js', function() {
@@ -6,7 +6,7 @@ $script('https://apis.google.com/js/api.js', function() {
   const CLIENT_ID = '797764752013-0nm6ktg4k6qt0le829k07kij3nvnco8t.apps.googleusercontent.com';
   const API_KEY = 'AIzaSyAYmhtzJWbOvN3mI1EKwPk-AspIOQ2cO7w';
   const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
-  const SCOPES = 'https://www.googleapis.com/auth/drive.metadata.readonly';
+  const SCOPES = 'https://www.googleapis.com/auth/drive.metadata.readonly https://www.googleapis.com/auth/drive.file'
   gapi.load('client:auth2', initClient);
   
   /**
@@ -14,6 +14,7 @@ $script('https://apis.google.com/js/api.js', function() {
    *  listeners.
    */
   function initClient() {
+    console.log("Init client")
     gapi.client.init({
       apiKey: API_KEY,
       clientId: CLIENT_ID,
@@ -25,7 +26,6 @@ $script('https://apis.google.com/js/api.js', function() {
 
       // Handle the initial sign-in state.
       updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-      console.log("Signed in")
     }, function(error) {
       console.error(error)
     });
@@ -61,6 +61,21 @@ export async function searchFolders(query) {
   return response.result.files
 }
 
+export async function upload(base64Photo, folderId) {
+  const metadata = {
+    name: Date.now() + '.jpeg',
+    // parents: [folderId]
+  }
+  const media = {
+    // body: base64Photo,
+    mimeType: 'image/jpeg'
+  }
+  const response = await gapi.client.drive.files.create({
+    resource: metadata,
+    media: media,
+    fields: 'id'
+  })
+}
 
 
 

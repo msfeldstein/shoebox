@@ -1,11 +1,8 @@
-import { searchFolders } from '../apis/google'
+import { searchFolders, transformFileList } from '../apis/active'
 import { debounce } from 'debounce'
 
-const SEARCHING = "SEARCHING"
-const GET_RESULTS = "GET_RESULTS"
-
-
-var wait = ms => new Promise((r, j)=>setTimeout(r, ms))
+const SEARCHING = "search/SEARCHING"
+const GET_RESULTS = "search/GET_RESULTS"
 
 export default function reducer(state = {
     query: '',
@@ -32,11 +29,12 @@ export default function reducer(state = {
 
 const debouncedSearch = debounce(async (dispatch, query) => {
     const files = await searchFolders(query)
-        console.log("Files", files)
-        dispatch({
-            type: GET_RESULTS,
-            results: files
-        })
+    
+    console.log(files)
+    dispatch({
+        type: GET_RESULTS,
+        results: files
+    })
 }, 500)
 
 export function search(query) {

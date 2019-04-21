@@ -1,13 +1,14 @@
-import { signIn, signOut } from '../apis/google'
+import { signIn, signOut, getAuthToken, saveLoginState } from '../apis/active'
+import { loadState, saveState } from '../localStorage'
 
-const SIGN_IN = "SIGN_IN"
-const SIGNING_IN = "SIGNING_IN"
-const FINISH_SIGNING_IN = "FINISH_SIGNING_IN"
-const SIGN_OUT = "SIGN_OUT"
+const SIGN_IN = "auth/SIGN_IN"
+const SIGNING_IN = "auth/SIGNING_IN"
+const FINISH_SIGNING_IN = "auth/FINISH_SIGNING_IN"
+const SIGN_OUT = "auth/SIGN_OUT"
 
 export default function reducer(state = {
-    isLoggedIn: false,
-    signInInProgress: false
+    signInInProgress: false,
+    token: getAuthToken()
 }, action = {}) {
     switch (action.type) {
         case SIGNING_IN:
@@ -15,8 +16,14 @@ export default function reducer(state = {
                 signInInProgress: true
             })
         case FINISH_SIGNING_IN:
+            saveLoginState(action.token)
             return Object.assign({}, state, {
-                signInInProgress: false
+                signInInProgress: false,
+                token: action.token,
+            })
+        case SIGN_OUT:
+            return Object.assign({}, state, {
+                token: null
             })
         default:
             return state
@@ -35,8 +42,17 @@ export function logIn() {
     }
 }
 
-export function logOut() {
+export function receiveAuthToken(token) {
+    return {
+        type: FINISH_SIGNING_IN,
+        token
+    }
+}
 
+export function logOut() {
+    return {
+        type: SIGN_OUT
+    }
 }
 
 export function showList() {

@@ -9,6 +9,7 @@ class App extends Component {
     return (
       <Router>
         <Route path="/" exact component={Home} />
+        <Route path="/auth" exact component={Home} />
         <Route path="/drive/:folder_id/:folder_name" component={Camera} />  
       </Router>
     );
