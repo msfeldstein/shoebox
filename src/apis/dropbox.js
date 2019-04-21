@@ -6,15 +6,19 @@ const STORAGE_KEY = 'dbx_oauth'
 const CLIENT_KEY = '8pe9up5w8yjixxk'
 
 const auth = loadState(STORAGE_KEY)
-console.log("AUTH", auth)
 const dbx = new Dropbox({
     clientId: CLIENT_KEY,
-    accessToken: auth
+    accessToken: auth,
+    fetch
 })
-window.dbx = dbx
 
 export function getAuthToken() {
     return dbx.getAccessToken()
+}
+
+export async function signIn() {
+    const url = dbx.getAuthenticationUrl('http://localhost:3000/auth');
+    window.open(url)
 }
 
 export function saveLoginState(token) {
@@ -22,14 +26,9 @@ export function saveLoginState(token) {
     dbx.setAccessToken(token)
 }
 
-export async function signIn() {
-    const url = dbx.getAuthenticationUrl('http://localhost:3000/auth');
-    console.log(url)
-    window.open(url)
-}
-  
 export async function signOut() {
-
+    saveState(STORAGE_KEY, null)
+    dbx.setAccessToken(null)
 }
 
 export async function searchFolders(query) {
@@ -40,7 +39,7 @@ export async function searchFolders(query) {
         mode: {'.tag': 'filename'}
     })
     return results.matches
-    .filter(match => match.metadata['id'] && match.metadata['.tag'] == 'folder')
+    .filter(match => match.metadata['id'] && match.metadata['.tag'] === 'folder')
     .map(match => {
         return {
             name: match.metadata.name,

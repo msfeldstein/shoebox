@@ -1,4 +1,4 @@
-import { searchFolders, transformFileList } from '../apis/active'
+import { searchFolders } from '../apis/active'
 import { debounce } from 'debounce'
 
 const SEARCHING = "search/SEARCHING"
@@ -29,8 +29,6 @@ export default function reducer(state = {
 
 const debouncedSearch = debounce(async (dispatch, query) => {
     const files = await searchFolders(query)
-    
-    console.log(files)
     dispatch({
         type: GET_RESULTS,
         results: files

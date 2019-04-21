@@ -1,7 +1,5 @@
 import { signIn, signOut, getAuthToken, saveLoginState } from '../apis/active'
-import { loadState, saveState } from '../localStorage'
 
-const SIGN_IN = "auth/SIGN_IN"
 const SIGNING_IN = "auth/SIGNING_IN"
 const FINISH_SIGNING_IN = "auth/FINISH_SIGNING_IN"
 const SIGN_OUT = "auth/SIGN_OUT"
@@ -50,6 +48,7 @@ export function receiveAuthToken(token) {
 }
 
 export function logOut() {
+    signOut()
     return {
         type: SIGN_OUT
     }
