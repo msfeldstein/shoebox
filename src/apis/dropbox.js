@@ -17,7 +17,7 @@ export function getAuthToken() {
 }
 
 export async function signIn() {
-    const url = dbx.getAuthenticationUrl('http://localhost:3000/auth');
+    const url = dbx.getAuthenticationUrl(document.location.origin + '/auth');
     window.open(url)
 }
 
