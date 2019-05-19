@@ -64,5 +64,13 @@ export async function upload(folderId, base64File) {
     }
 }
 
+export function encodeForSubdomain(id) {
+    return id.substring(3)
+}
+
+export function decodeFromSubdomain(id) {
+    return 'id:' + id
+}
+
 
 

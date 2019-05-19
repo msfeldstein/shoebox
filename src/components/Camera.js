@@ -4,7 +4,7 @@ import { useDispatch } from 'redux-react-hook'
 import { uploadFile } from '../modules/upload'
 import querystring from 'querystring'
 import { receiveAuthToken } from '../modules/driveAuth'
-import { getAuthToken } from '../apis/active'
+import { getAuthToken, decodeFromSubdomain } from '../apis/active'
 
 const titleStyle = {
   color: 'white',
@@ -27,18 +27,30 @@ const buttonStyle = {
 
 export default function(props) {
     const directoryName = props.match.params.folder_name
-    const directoryID = props.match.params.folder_id
+    const directoryID = decodeFromSubdomain(props.match.params.folder_id)
 
     const webcam = useRef(null)
 
     const dispatch = useDispatch()
     useEffect(() => {
       const params = querystring.parse(document.location.hash.substring(1))
+      console.log("params", params)
       if (params.access_token) {
         dispatch(receiveAuthToken(params.access_token))
       } else {
         document.location.hash = "access_token=" + getAuthToken()
       }
+    })
+
+    useEffect(() => {
+      const manifest = {
+        start_url: document.location.href,
+        short_name: directoryName
+      }
+      const stringManifest = JSON.stringify(manifest)
+      const blob = new Blob([stringManifest], { type: 'application/json'})
+      const manifestURL = URL.createObjectURL(blob)
+      document.querySelector('link[rel=manifest]').href = manifestURL
     })
 
     const upload = useCallback(

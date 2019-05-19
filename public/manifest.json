@@ -8,7 +8,7 @@
       "type": "image/x-icon"
     }
   ],
-  "start_url": ".",
+  "start_url": "https://macromeez.com:3000/drive/id:fXK-YhyR0ioAAAAAAAAAJg/Test%20Folder#access_token=1AgOZrvsnFAAAAAAAAAK1oJ2kL1CKB9BSCnDqan4nqxfd3g_fIzTeXplV-9AmGMR",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff"
